@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Animal Crossing Bingo</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+  </head>
+  <body>
+      <div class="container" id="settingsContainer">
+        <div class="row justify-content-center">
+            <h1>Animal Crossing Bingo!</h1>
+        </div>
+        <div class="row justify-content-center">
+        
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="btn-group-vertical btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-success btn-lg mt-2 active">
+                   <input type="radio" name="options" id="easy" autocomplete="off" checked> 
+                   Easy
+                </label>
+                <label class="btn btn-warning btn-lg mt-2">
+                   <input type="radio" name="options" id="normal" autocomplete="off"> 
+                   Normal
+                </label>
+                <label class="btn btn-danger btn-lg mt-2">
+                   <input type="radio" name="options" id="hard" autocomplete="off"> 
+                   Hard
+                </label>
+             </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="form-group">
+              <label class="small">Optionally, enter a seed: </label> 
+              <input type="text" id="manualSeed" class="form-control" placeholder="Enter A Seed"/>
+          </div>
+        </div>
+
+        <div class="row justify-content-center mt-2">
+          <input type="button" class="btn btn-primary btn-lg" id="goButton" value="Start Playing!"/>
+        </div>
+
+      <script src="js/index.js" type="text/javascript"></script>
+  </body>
+</html>
