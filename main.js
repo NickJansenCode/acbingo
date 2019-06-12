@@ -1,21 +1,23 @@
 const {app, BrowserWindow} = require('electron')
 
+app.commandLine.appendSwitch("disable-gpu")
+
 createWindow = () => {
     let win = new BrowserWindow({
-        width: 600,
-        height: 800,
-        minHeight: 800,
-        minWidth: 600,
+        width: 625,
+        height: 825,
+        // minHeight: 800,
+        // minWidth: 600,
         webPreferences:{
             nodeIntegration: true
         },
-        icon: "app/img/icon.png"
+        icon: "app/img/icon.png",
     })
 
     win.loadFile("app/index.html");
 
     // Debug //
-    //win.webContents.openDevTools();
+    win.webContents.openDevTools();
     win.setMenuBarVisibility(false);
 
     win.on('closed', () => {
