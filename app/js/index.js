@@ -1,4 +1,4 @@
-// Most of this stuff was graciously sourced from Cuyler36 on github. Go check him out, he's the smart one. //
+// Most of this stuff was graciously sourced from Cuyler36 on github. Go check him out, he's a smart cookie. //
 const $ = require('jquery')
 require('bootstrap')
 
@@ -141,8 +141,8 @@ function Bingo(size, seed, difficulty, balance) {
         this.difficulty = Bingo.DIFFICULTY_TABLE[difficulty];
     }
 
-    this.seed = seed;
-    this.random = new Random(seed + this.difficulty);
+    this.seed = parseInt(seed);
+    this.random = new Random(parseInt(seed) + this.difficulty);
     this.balanced = balance;
 
     this.gamedata = null;
