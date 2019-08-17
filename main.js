@@ -1,4 +1,5 @@
 const {app, BrowserWindow} = require('electron')
+require('dotenv').config();
 
 app.commandLine.appendSwitch("disable-gpu")
 

@@ -49,11 +49,6 @@ body.popout #bingo
 	padding-left: 2%;
 }
 
-#bingo
-{
-	/*float: right;*/
-}
-
 #bingo td
 {
 	border: 1px solid black;
@@ -139,18 +134,12 @@ body.popout #bingo td.goal
 #bingo td span
 {
 	display: block;
-	font-size: 16pt;
 }
 
 #bingo.large td span
 {
-	font-size: 14pt;
+	font-size: 8pt;
 }
-
-/*#bingo td span.goaltext
-{
-	font-weight: bold;
-}*/
 
 #bingo td span.modtext
 {
@@ -165,4 +154,9 @@ body.popout #bingo td.goal
 
 .bingoTable{
     height: 100%;
+}
+
+.goaltext{
+	margin-left: 2%;
+	margin-right: 2%;
 }

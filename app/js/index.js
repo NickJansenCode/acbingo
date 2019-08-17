@@ -105,12 +105,5 @@ $(document).ready(function(){
         $("#settingsContainer").hide();
         setDifficulty($("input[name='options']:checked").val());
 	});
-	
-	$("#bingo td.goal").click(function (e) {
-		var c = $(this).data('cell-data');
-		c.state = (c.state + 1) % 4;
-		var cell = c.cell;
-		cell.removeClass("yes maybe no").addClass([null, "yes", "maybe", "no"][c.state]);
-	});
 });
 
