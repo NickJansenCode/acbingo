@@ -15,7 +15,21 @@ class Bingo {
      * @param {any} balance I'm not sure what this is.
      */
     constructor(size, seed, difficulty, balance) {
-        
+
+        /**
+         * Key-Value pairs to represent board difficulty.
+         */
+        this.DifficultyTable = {
+            'easy': -1,
+            'e': -1,
+            'normal': 0,
+            'n': 0,
+            'hard': 1,
+            'h': 1,
+            'difficult': 1,
+            'd': 1,
+        };
+
         /**
          * The game's difficulty.
          */
@@ -32,7 +46,7 @@ class Bingo {
          * The board's random object.
          */
         this.random = new Random(parseInt(seed) + this.difficulty);
-        
+
         /**
          * I'm not sure what this is.
          */
@@ -42,7 +56,7 @@ class Bingo {
          * The game data. (JSON)
          */
         this.gamedata = null;
-        
+
         /**
          * Array containing the game board.
          */
@@ -63,44 +77,32 @@ class Bingo {
          * @see MagicSquare.js
          */
         this.magic = new MagicSquare(size, this.random);
+
+        /**
+         * The variance in difficulty.
+         */
+        this.DifficultyVariance = 0.2;
+
+        /**
+         * Not sure yet.
+         */
+        this.DifficultyKeepsize = 3 / 5;
+
+        /**
+         * The max number of attempts to try to find a suitable goal to add to the board.
+         */
+        this.MaxIterations = 200;
+
     }
 
-    /**
-     * Key-Value pairs to represent board difficulty.
-     */
-    DifficultyTable = {
-        'easy': -1,
-        'e': -1,
-        'normal': 0,
-        'n': 0,
-        'hard': 1,
-        'h': 1,
-        'difficult': 1,
-        'd': 1,
-    };
-
-    /**
-     * The variance in difficulty.
-     */
-    DifficultyVariance = 0.2;
-
-    /**
-     * Not sure yet.
-     */
-    DifficultyKeepsize = 3/5;
-
-    /**
-     * The max number of attempts to try to find a suitable goal to add to the board.
-     */
-    MaxIterations = 200;
 
     /**
      * Draws the Bingo Board to the screen.
      */
-    draw(){
+    draw() {
         let n = 1;
         var GROUPS = {
-            
+
             // Rows & columns. //
             col1: [], col2: [], col3: [], col4: [], col5: [],
             row1: [], row2: [], row3: [], row4: [], row5: [],
@@ -129,7 +131,7 @@ class Bingo {
                 brow.push(c = { cell: cell, goal: null, mod: null, state: 0, groups: _groups });
                 cell.data("cell-data", c);
             }
-            
+
             // Add the row to the table. //
             this.table.append(row);
             this.board.push(brow);
@@ -137,13 +139,23 @@ class Bingo {
 
         // Add the table to the screen. //
         $("#bingo-container").empty().append(this.table);
+
+
+
+        // $(".bingoPic").css({
+        //     width: parseInt(process.env.IMAGESIZE),
+        //     height: parseInt(process.env.IMAGESIZE)
+        // });
+
+
+
     }
 
 
     /**
      * 
      */
-    getGameData(){
+    getGameData() {
         $.getJSON("./js/game.json")
             .then((data) => {
                 this.processGameData(data);
@@ -306,7 +318,7 @@ class Bingo {
                         var cell = this.board[cardY][cardX].cell;
                         usedgoals.push(goal.id);
                         if (img)
-                            $('<img>').attr('src', img).appendTo(cell);
+                            $('<img class="bingoPic">').attr('src', img).appendTo(cell);
                         for (var k = 0; k < tags.length; ++k)
                             tagdata[tags[k]]['@used'] = true;
                         $("<span>").addClass("goaltext").text(goal.name).appendTo(cell);
@@ -335,6 +347,23 @@ class Bingo {
                     $("<span>").addClass("modtext").text(m.name).appendTo(this.board[cardY][cardX].cell);
                 }
             }
+
+            if (process.env.FONTSIZE){
+                $("#bingo td span").css("fontSize", parseInt(process.env.FONTSIZE));
+            }
+
+            if (process.env.IMAGESIZE){
+                $(".bingoPic").css("width", parseInt(process.env.IMAGESIZE));
+                $(".bingoPic").css("height", parseInt(process.env.IMAGESIZE));
+            }
+            
+            $("#bingo td.goal").click(function (e) {
+                var c = $(this).data('cell-data');
+                c.state = (c.state + 1) % 4;
+                var cell = c.cell;
+                cell.removeClass("yes maybe no").addClass([null, "yes", "maybe", "no"][c.state]);
+            });
+            
     }
 }
 
