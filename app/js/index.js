@@ -74,10 +74,12 @@ function regenerateBoard()
 	}
 
     if ($("#manualSeed").val() == ""){
-        BINGO = new Bingo(5, seed, difficulty);
+		BINGO = new Bingo(5, seed, difficulty);
+		BINGO.getGameData();
     }
     else{
-        BINGO = new Bingo(5, $("#manualSeed").val(), difficulty);
+		BINGO = new Bingo(5, $("#manualSeed").val(), difficulty);
+		BINGO.getGameData();
     }
 	
 }
@@ -102,6 +104,13 @@ $(document).ready(function(){
     $("#goButton").click(function(e){
         $("#settingsContainer").hide();
         setDifficulty($("input[name='options']:checked").val());
-    })
+	});
+	
+	$("#bingo td.goal").click(function (e) {
+		var c = $(this).data('cell-data');
+		c.state = (c.state + 1) % 4;
+		var cell = c.cell;
+		cell.removeClass("yes maybe no").addClass([null, "yes", "maybe", "no"][c.state]);
+	});
 });
 

@@ -16,72 +16,53 @@ class Bingo {
      */
     constructor(size, seed, difficulty, balance) {
         
+        /**
+         * The game's difficulty.
+         */
         this.difficulty = (difficulty && difficulty in this.DifficultyTable) ?
             this.DifficultyTable[difficulty] :
             0;
 
+        /**
+         * The game's seed.
+         */
         this.seed = parseInt(seed);
+
+        /**
+         * The board's random object.
+         */
         this.random = new Random(parseInt(seed) + this.difficulty);
+        
+        /**
+         * I'm not sure what this is.
+         */
         this.balanced = balance;
+
+        /**
+         * The game data. (JSON)
+         */
         this.gamedata = null;
         
-        $.getJSON("./js/game.json", (function (bingo) {
-            return function (data) {
-                bingo.processGameData(data);
-                bingo.generateBoard();
-            };
-        })(this)).fail(function () { console.log(arguments); });
-        
-        var board = this.board = [];
-        var table = this.table = $("<table id='bingo' class='bingoTable'>");
+        /**
+         * Array containing the game board.
+         */
+        this.board = [];
+
+        /**
+         * HTML representation of the bingo board.
+         */
+        this.table = $("<table id='bingo' class='bingoTable'>");
+
+        /**
+         * The board's size.
+         */
         this.size = size;
-        table.toggleClass('large', LARGE_CARD);
-        // make a magic square for the board difficulty
+
+        /**
+         * A MagicSquare for the board's difficulty.
+         * @see MagicSquare.js
+         */
         this.magic = new MagicSquare(size, this.random);
-        var i, j, n = 1;
-        var GROUPS = {
-            // rows and columns (tags)
-            col1: [], col2: [], col3: [], col4: [], col5: [],
-            row1: [], row2: [], row3: [], row4: [], row5: [],
-            // 2 diagonals
-            diag1: [], diag2: [],
-        };
-        for (i = 1; i <= size; ++i) {
-            var row = $("<tr>").addClass("row" + i);
-            var brow = [];
-            for (j = 1; j <= size; ++j, ++n) {
-                var _groups = [GROUPS["col" + j], GROUPS["row" + i]];
-                var cell = $("<td>").addClass("col" + j).addClass("row" + i), c;
-                cell.addClass("goal").attr("data-cell", n);
-                // add diagonals
-                if (i == j) {
-                    cell.addClass("diag1");
-                    _groups.push(GROUPS.diag1);
-                }
-                if (i + j == size + 1) {
-                    cell.addClass("diag2");
-                    _groups.push(GROUPS.diag2);
-                }
-                row.append(cell);
-                brow.push(c = { cell: cell, goal: null, mod: null, state: 0, groups: _groups });
-                cell.data("cell-data", c);
-            }
-            // add the row to the table
-            table.append(row);
-            board.push(brow);
-        }
-        // add the table to the screen now
-        $("#bingo-container").empty().append(table);
-        $("#bingo td.goal").click(function (e) {
-            var c = $(this).data('cell-data');
-            c.state = (c.state + 1) % 4;
-            var cell = c.cell;
-            cell.removeClass("yes maybe no").addClass([null, "yes", "maybe", "no"][c.state]);
-        });
-        // resize this mess
-        var col1w = $('#bingo td.header[data-type="diag1"]').width();
-        var sz = ($('#bingo-container').innerWidth() * .9 - col1w) / 5;
-        $("#bingo td.goal").outerWidth(sz).outerHeight(sz);
     }
 
     /**
@@ -113,7 +94,66 @@ class Bingo {
      */
     MaxIterations = 200;
 
+    /**
+     * Draws the Bingo Board to the screen.
+     */
+    draw(){
+        let n = 1;
+        var GROUPS = {
+            
+            // Rows & columns. //
+            col1: [], col2: [], col3: [], col4: [], col5: [],
+            row1: [], row2: [], row3: [], row4: [], row5: [],
 
+            // Diagonals. //
+            diag1: [], diag2: [],
+        };
+
+        for (let i = 1; i <= this.size; ++i) {
+            var row = $("<tr>").addClass("row" + i);
+            var brow = [];
+            for (let j = 1; j <= this.size; ++j, ++n) {
+                var _groups = [GROUPS["col" + j], GROUPS["row" + i]];
+                var cell = $("<td>").addClass("col" + j).addClass("row" + i), c;
+                cell.addClass("goal").attr("data-cell", n);
+                // add diagonals
+                if (i == j) {
+                    cell.addClass("diag1");
+                    _groups.push(GROUPS.diag1);
+                }
+                if (i + j == this.size + 1) {
+                    cell.addClass("diag2");
+                    _groups.push(GROUPS.diag2);
+                }
+                row.append(cell);
+                brow.push(c = { cell: cell, goal: null, mod: null, state: 0, groups: _groups });
+                cell.data("cell-data", c);
+            }
+            
+            // Add the row to the table. //
+            this.table.append(row);
+            this.board.push(brow);
+        }
+
+        // Add the table to the screen. //
+        $("#bingo-container").empty().append(this.table);
+    }
+
+
+    /**
+     * 
+     */
+    getGameData(){
+        $.getJSON("./js/game.json")
+            .then((data) => {
+                this.processGameData(data);
+                this.draw();
+                this.generateBoard();
+            })
+            .fail((error) => {
+                console.error(error);
+            })
+    };
 
     /**
      * Huge monolithic method that does....something? Requires further investigation.
