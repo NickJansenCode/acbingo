@@ -10,7 +10,7 @@
   "author": "Nick Jansen",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^5.0.2"
+    "electron": "^15.5.5"
   },
   "dependencies": {
     "bootstrap": "^4.3.1",
